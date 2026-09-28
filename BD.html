@@ -1,384 +1,971 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>空白页日记 - 旧论坛碎片</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Microsoft YaHei", serif;
-        }
-        body {
-            background-color: #f3f1e9;
-            color:#222;
-            line-height:1.7;
-            padding:20px;
-            transition: background 0.6s;
-        }
-        .forum-container{
-            max-width:900px;
-            margin:0 auto;
-            background:#fff;
-            border:1px solid #bbb;
-            padding:24px;
-            box-shadow:0 2px 8px #00000022;
-        }
-        .forum-header{
-            border-bottom:2px solid #999;
-            padding-bottom:12px;
-            margin-bottom:20px;
-        }
-        .forum-title{
-            font-size:22px;
-            color:#333;
-        }
-        .san-bar-wrap{
-            margin:10px 0;
-            padding:8px;
-            background:#eee;
-            border-radius:4px;
-        }
-        .san-label{
-            font-size:14px;
-        }
-        .san-bar{
-            height:12px;
-            width:100%;
-            background:#ddd;
-            margin-top:4px;
-            overflow:hidden;
-        }
-        .san-fill{
-            height:100%;
-            background:#448844;
-            transition:width 0.4s;
-        }
-        .time-nav{
-            margin:16px 0;
-            display:flex;
-            gap:10px;
-            flex-wrap:wrap;
-        }
-        .time-btn{
-            padding:6px 14px;
-            border:1px solid #777;
-            background:#e9e5da;
-            cursor:pointer;
-            border-radius:4px;
-        }
-        .time-btn.active{
-            background:#b8a88c;
-            color:white;
-        }
-        .diary-card{
-            display:none;
-            border:1px solid #ccc;
-            padding:20px;
-            margin-bottom:20px;
-            background:#faf7f0;
-        }
-        .diary-card.show{
-            display:block;
-        }
-        .lock-box{
-            padding:20px;
-            border:1px dashed #996655;
-            background:#f7f2e8;
-            text-align:center;
-        }
-        .pwd-input{
-            padding:8px 12px;
-            width:220px;
-            font-size:16px;
-            margin:10px 0;
-        }
-        .pwd-submit{
-            padding:8px 18px;
-            background:#776954;
-            color:#fff;
-            border:none;
-            cursor:pointer;
-        }
-        .warn-text{
-            color:#b32424;
-            font-weight:bold;
-            margin-top:8px;
-        }
-        .diary-img-wrap{
-            text-align:center;
-            margin:16px 0;
-        }
-        .diary-img{
-            max-width:100%;
-            max-height:420px;
-            border:1px solid #999;
-            padding:4px;
-            background:#fff;
-        }
-        .block-title{
-            font-weight:bold;
-            font-size:17px;
-            margin:12px 0 6px;
-            color:#444;
-        }
-        .diary-content{
-            margin-bottom:18px;
-        }
-        .diary-mood{
-            background:#f0ebe0;
-            padding:12px;
-            border-left:4px solid #998870;
-            margin-bottom:18px;
-        }
-        .clue-block{
-            margin-top:20px;
-            padding:14px;
-            background:#e8e2d5;
-            border:1px dashed #887766;
-        }
-        .clue-title{
-            font-weight:bold;
-        }
-        .back-btn{
-            margin-top:20px;
-            padding:8px 16px;
-            background:#776954;
-            color:#fff;
-            border:none;
-            cursor:pointer;
-        }
-        /* SAN暴跌后的视觉效果 */
-        .san‑danger{
-            background-color:#2c1a1a;
-            color:#e9c9c9;
-        }
-        .san‑danger .forum-container{
-            background:#442c2c;
-            border-color:#774444;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>✿ 时光日记本 ✿ 回忆论坛</title>
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    font-family:'Microsoft YaHei','PingFang SC',sans-serif;
+    color:#e8ecff;
+    background:
+      radial-gradient(ellipse at 15% 8%, #2a1a5e 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 15%, #12275e 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 105%, #3b1a4d 0%, transparent 60%),
+      #080c22;
+    overflow-x:hidden;
+  }
+  /* ── 星星层 ── */
+  body::before{
+    content:"";
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      radial-gradient(1.6px 1.6px at 30px 40px, #fff, transparent),
+      radial-gradient(1.4px 1.4px at 130px 90px, #cfe4ff, transparent),
+      radial-gradient(2px 2px at 210px 32px, #ffe9a8, transparent),
+      radial-gradient(1px 1px at 80px 170px, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 268px 208px, #b7d8ff, transparent),
+      radial-gradient(1.2px 1.2px at 180px 250px, #ffd3ec, transparent);
+    background-size:320px 280px;
+    animation:twinkle 3.6s ease-in-out infinite alternate;
+    opacity:.7;
+  }
+  @keyframes twinkle{ from{opacity:.3} to{opacity:.9} }
+
+  /* ── 顶部 ── */
+  .site-header{position:relative;z-index:1;text-align:center;padding:26px 14px 8px;}
+  .logo{
+    font-size:clamp(24px,5vw,44px);
+    font-weight:900; letter-spacing:5px; line-height:1.2;
+    background:linear-gradient(90deg,#ffd76e,#ff9ec4,#6fd3ff,#a78bfa,#ffd76e);
+    background-size:300% 100%;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation:shine 6s linear infinite;
+    filter:drop-shadow(0 0 14px rgba(255,158,196,.45));
+  }
+  @keyframes shine{ to{background-position:300% 0} }
+  .subtitle{font-size:13px;color:#8fa5d8;letter-spacing:3px;margin-top:6px;}
+  .marquee-wrap{
+    overflow:hidden; max-width:880px; margin:14px auto 0;
+    border:1px solid #3d4a8a; border-radius:22px;
+    background:rgba(10,16,48,.65);
+    box-shadow:inset 0 0 14px rgba(110,150,255,.18);
+  }
+  .marquee{
+    display:inline-block; white-space:nowrap;
+    padding:5px 0; padding-left:100%;
+    color:#9fd0ff; font-size:13px; letter-spacing:1px;
+    animation:scroll 26s linear infinite;
+  }
+  @keyframes scroll{ to{transform:translateX(-100%)} }
+
+  /* ── 时间线导航 ── */
+  .timeline{
+    position:relative; z-index:1;
+    display:flex; justify-content:center; flex-wrap:wrap;
+    gap:10px; padding:16px 16px 18px;
+  }
+  .tl-btn{
+    font-family:inherit; cursor:pointer; font-size:14px;
+    padding:9px 20px; border-radius:22px;
+    border:2px solid #5b6bd6;
+    background:linear-gradient(180deg,#2b3480,#1a1f4d);
+    color:#cfe0ff;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.28), 0 3px 0 #121637;
+    transition:transform .15s, border-color .15s, box-shadow .15s;
+  }
+  .tl-btn:hover{transform:translateY(-2px); border-color:#8fa2ff;}
+  .tl-btn:active{transform:translateY(1px); box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 1px 0 #121637;}
+  .tl-btn.active{
+    background:linear-gradient(180deg,#ffe9a0,#ffab3d);
+    border-color:#fff3c4; color:#40260a; font-weight:700;
+  }
+
+  /* ── 布局 ── */
+  .layout{
+    position:relative; z-index:1;
+    max-width:1260px; margin:0 auto; padding:0 16px 46px;
+    display:grid; grid-template-columns:212px minmax(0,1fr) 212px;
+    gap:16px; align-items:start;
+  }
+  @media(max-width:980px){ .layout{grid-template-columns:1fr;} }
+
+  /* ── 两侧留言板 ── */
+  .side{position:sticky; top:14px;}
+  @media(max-width:980px){ .side{position:static;} }
+  .side-title{
+    font-size:12px; letter-spacing:2px; text-align:center;
+    color:#ffe9a8; margin-bottom:10px;
+    text-shadow:0 0 8px rgba(255,215,110,.5);
+  }
+  .note{
+    background:#fff8d6; color:#5a4418;
+    padding:9px 11px; margin-bottom:9px;
+    border-radius:4px; font-size:13px; line-height:1.6;
+    box-shadow:2px 3px 0 rgba(0,0,0,.35);
+    transform:rotate(-1.2deg);
+    outline:none;
+  }
+  .note:nth-child(even){transform:rotate(1.4deg); background:#d9f2ff; color:#16465e;}
+  .note:focus{box-shadow:0 0 0 2px #ffd76e, 2px 3px 0 rgba(0,0,0,.35);}
+
+  .mini-btn{
+    display:block; width:100%; cursor:pointer;
+    font-family:inherit; font-size:12px;
+    padding:6px 8px; border-radius:6px;
+    border:1px dashed #7d8cd8; background:rgba(30,40,90,.6);
+    color:#bcd0ff; transition:.15s;
+  }
+  .mini-btn:hover{background:rgba(60,80,170,.7); border-color:#c9d7ff; color:#fff;}
+
+  /* ── 贴子页面 ── */
+  .era{
+    background:var(--era-bg,#eaf6ff);
+    color:var(--era-ink,#1f3f6e);
+    font-family:var(--era-font,'Microsoft YaHei',sans-serif);
+    border-radius:14px;
+    padding:14px;
+    border:3px solid rgba(255,255,255,.55);
+    box-shadow:0 14px 40px rgba(0,0,0,.55), 0 0 0 1px rgba(120,150,255,.35);
+    transition:background .3s, color .3s, font-family .3s;
+  }
+
+  /* 工具栏 */
+  .toolbar{
+    display:flex; flex-wrap:wrap; gap:12px; align-items:center;
+    font-size:12px;
+    padding:8px 12px; margin-bottom:14px;
+    border:1px dashed rgba(0,0,0,.25);
+    border-radius:8px;
+    background:rgba(255,255,255,.35);
+  }
+  .toolbar .tb-label{font-weight:700; letter-spacing:1px; opacity:.8;}
+  .toolbar label{display:inline-flex; align-items:center; gap:5px;}
+  .toolbar input[type=color]{
+    width:32px; height:22px; padding:0; border:1px solid rgba(0,0,0,.3);
+    border-radius:4px; background:none; cursor:pointer;
+  }
+  .toolbar select{
+    font-family:inherit; font-size:12px; padding:2px 6px;
+    border-radius:4px; border:1px solid rgba(0,0,0,.3);
+    background:#fff; color:#222;
+  }
+  .toolbar button{
+    font-family:inherit; font-size:12px; cursor:pointer;
+    padding:4px 12px; border-radius:6px;
+    border:1px solid rgba(0,0,0,.3);
+    background:rgba(255,255,255,.7); color:inherit;
+  }
+  .toolbar button:hover{background:#fff;}
+
+  /* 帖子 */
+  .post{
+    background:rgba(255,255,255,.75);
+    border:2px solid rgba(0,0,0,.1);
+    border-radius:10px;
+    overflow:hidden;
+    backdrop-filter:blur(2px);
+  }
+  .post-head{
+    display:flex; align-items:center; gap:12px;
+    padding:12px 14px;
+    background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(235,240,255,.85));
+    border-bottom:2px solid rgba(0,0,0,.08);
+  }
+  .avatar{
+    width:46px; height:46px; flex:0 0 46px;
+    display:grid; place-items:center;
+    font-size:22px; border-radius:10px;
+    background:linear-gradient(135deg,#ffd76e,#ff9ec4);
+    border:2px solid #fff;
+    box-shadow:0 2px 8px rgba(0,0,0,.25);
+  }
+  .who{flex:1; min-width:0;}
+  .uname{font-weight:900; font-size:15px; outline:none;}
+  .badge{
+    display:inline-block; margin-left:8px;
+    font-size:11px; padding:1px 8px; border-radius:10px;
+    background:linear-gradient(180deg,#ffd76e,#ffab3d);
+    color:#40260a; font-weight:700;
+  }
+  .meta{font-size:11px; opacity:.6; margin-top:3px;}
+  .post-time{font-size:12px; opacity:.65; white-space:nowrap;}
+
+  .post-title{
+    margin:0; padding:14px 16px 8px;
+    font-size:18px; font-weight:900; outline:none;
+  }
+
+  .section{padding:6px 16px 4px;}
+  .sec-tag{
+    display:inline-block;
+    font-size:12px; font-weight:700; letter-spacing:1px;
+    padding:3px 12px; margin-bottom:8px;
+    border-radius:12px;
+    background:rgba(120,150,255,.2);
+    border:1px solid rgba(120,150,255,.45);
+  }
+  .sec-body{
+    font-size:15px; line-height:2; white-space:pre-wrap;
+    outline:none; padding:6px 8px; border-radius:6px;
+    border:1px dashed transparent;
+  }
+  .sec-body:hover{border-color:rgba(0,0,0,.18);}
+  .sec-body:focus{border-color:#6fd3ff; background:rgba(255,255,255,.6);}
+
+  /* 照片 */
+  .photo{
+    margin:12px 0 10px;
+    width:fit-content; max-width:100%;
+    background:#fff; padding:10px 10px 6px;
+    border-radius:3px;
+    box-shadow:0 8px 22px rgba(0,0,0,.3);
+    transform:rotate(-.9deg);
+  }
+  .photo:nth-of-type(even){transform:rotate(1deg);}
+  .photo img{display:block; width:100%; max-width:340px; border-radius:2px;}
+  .photo figcaption{
+    font-size:12px; color:#666 !important;
+    text-align:center; padding:6px 2px 2px; outline:none;
+  }
+
+  /* 附件 */
+  .attachments{
+    display:flex; flex-wrap:wrap; align-items:center; gap:10px;
+    margin:14px 16px 18px; padding-top:12px;
+    border-top:1px dashed rgba(0,0,0,.18);
+    font-size:13px;
+  }
+  .attach{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:4px 10px; border-radius:16px;
+    background:rgba(120,150,255,.15);
+    border:1px solid rgba(120,150,255,.4);
+  }
+  .attach-name{outline:none;}
+  .attach-open{color:#1a5fd0; text-decoration:none; font-size:12px;}
+  .attach-open:hover{text-decoration:underline;}
+
+  /* 回复 */
+  .replies-head{
+    margin:18px 0 10px; font-size:14px; font-weight:700;
+    letter-spacing:1px;
+  }
+  .reply{
+    display:flex; gap:10px;
+    padding:12px 14px; margin-bottom:8px;
+    background:rgba(255,255,255,.68);
+    border-left:4px solid rgba(120,150,255,.6);
+    border-radius:0 8px 8px 0;
+    border-top:1px solid rgba(0,0,0,.06);
+    border-right:1px solid rgba(0,0,0,.06);
+    border-bottom:1px solid rgba(0,0,0,.06);
+  }
+  .r-avatar{
+    width:36px;height:36px;flex:0 0 36px;
+    display:grid;place-items:center;border-radius:50%;
+    font-size:16px; color:#fff;
+    box-shadow:0 2px 6px rgba(0,0,0,.25);
+  }
+  .r-main{flex:1; min-width:0;}
+  .r-top{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .r-name{font-weight:700; font-size:14px; outline:none;}
+  .r-floor{
+    font-size:11px; padding:0 7px; border-radius:8px;
+    background:rgba(0,0,0,.08);
+  }
+  .r-time{font-size:11px; opacity:.55;}
+  .del{
+    margin-left:auto; width:auto; padding:1px 8px;
+    font-size:11px; border-radius:8px;
+  }
+  .r-text{
+    margin-top:6px; font-size:14px; line-height:1.9;
+    white-space:pre-wrap; outline:none;
+    padding:4px 6px; border-radius:6px;
+    border:1px dashed transparent;
+  }
+  .r-text:hover{border-color:rgba(0,0,0,.15);}
+  .r-text:focus{border-color:#6fd3ff; background:rgba(255,255,255,.8);}
+
+  .add-reply{
+    display:block; width:100%; cursor:pointer;
+    font-family:inherit; font-size:14px; font-weight:700;
+    padding:11px; margin-top:12px;
+    border-radius:8px;
+    border:2px dashed rgba(0,0,0,.3);
+    background:rgba(255,255,255,.5);
+    color:inherit; transition:.15s;
+  }
+  .add-reply:hover{background:#fff; border-color:#6fd3ff;}
+
+  /* 底部 */
+  .footer{
+    position:relative; z-index:1;
+    text-align:center; font-size:12px; color:#6d7fae;
+    padding:20px 14px 40px; line-height:2;
+  }
+  .footer a{color:#9fd0ff; text-decoration:none;}
+  .footer a:hover{text-decoration:underline;}
+
+  /* 滚动条 */
+  ::-webkit-scrollbar{width:12px;height:12px;}
+  ::-webkit-scrollbar-track{background:#0d1330;}
+  ::-webkit-scrollbar-thumb{
+    background:linear-gradient(180deg,#6fd3ff,#a78bfa);
+    border-radius:8px; border:3px solid #0d1330;
+  }
+  /* 编辑提示 */
+  .hint{
+    position:relative; z-index:1;
+    text-align:center; font-size:12px; color:#7f93c8;
+    padding:0 16px 6px;
+  }
+</style>
 </head>
 <body>
-<div class="forum-container">
-    <div class="forum-header">
-        <h2 class="forum-title">匿名旧论坛｜遗失的日记碎片</h2>
-        <p>帖子发布者：匿名用户 | 浏览记录：碎片化存档</p>
-        <div class="san-bar-wrap">
-            <div class="san-label">SAN值：<span id="san-value">100</span></div>
-            <div class="san-bar">
-                <div id="san-fill" class="san-fill" style="width:100%"></div>
-            </div>
-        </div>
-    </div>
 
-    <!-- 时间导航按钮 -->
-    <div class="time-nav">
-        <button class="time-btn active" data-id="day1">线索一：03‑12</button>
-        <button class="time-btn" data-id="day2">线索二：04‑05</button>
-        <button class="time-btn" data-id="day3">线索三：05‑18</button>
-        <button class="time-btn" data-id="day4">线索四：06‑02</button>
-    </div>
+<header class="site-header">
+  <div class="logo">✿ 时光日记本 ✿</div>
+  <div class="subtitle">— 一个属于回忆的小小论坛 —</div>
+  <div class="marquee-wrap">
+    <div class="marquee">★ 欢迎来到「时光日记本」论坛 ★ 本站创建于 2003 年 ★ 请珍惜每一段回忆 ★ 最佳浏览分辨率 1024×768 ★ 访客数：0001234 ★ 发帖前请先阅读版规 ★ 严禁剧透 ★</div>
+  </div>
+</header>
 
-    <!-- ========== 线索1 day1 ========== -->
-    <div class="diary-card" id="day1">
-        <!-- 锁定区域，未解锁显示密码框 -->
-        <div class="lock-box" id="lock-day1">
-            <h4>🔒 该日记碎片已加密，请输入密码解锁</h4>
-            <input type="text" class="pwd-input" id="pwd-day1" placeholder="输入密码">
-            <button class="pwd-submit" onclick="checkPwd('day1')">确认</button>
-            <div class="warn-text" id="warn-day1"></div>
-        </div>
-        <!-- 解锁后才展示日记内容 -->
-        <div id="content-day1" style="display:none;">
-            <h3>【日记日期：20XX‑03‑12】</h3>
-            <div class="diary-img-wrap">
-                <img class="diary-img" src="diary_01.jpg" alt="日记本扫描页">
-            </div>
-            <div class="block-title">📖 当日日记内容</div>
-            <div class="diary-content">
-                今天家里又发生争吵。我躲在房间里，把本子藏进抽屉。很多话不敢写在明面，只能写在夹缝里。
-            </div>
-            <div class="block-title">💭 当日心情</div>
-            <div class="diary-mood">
-                很压抑。想逃出去，可是没有地方可以去。
-            </div>
-            <div class="clue-block">
-                <div class="clue-title">🔍 线索谜题一</div>
-                <p>提示：日记本页面角落有一串隐晦符号，需要结合吉他乐谱来破解密码。</p>
-            </div>
-        </div>
-    </div>
+<nav class="timeline" id="timeline"></nav>
+<div class="hint">✎ 页面上的文字都可以直接点击修改，修改会自动保存在你的浏览器里</div>
 
-    <!-- ========== 线索2 day2 ========== -->
-    <div class="diary-card" id="day2">
-        <div class="lock-box" id="lock-day2">
-            <h4>🔒 该日记碎片已加密，请输入密码解锁</h4>
-            <input type="text" class="pwd-input" id="pwd-day2" placeholder="输入密码">
-            <button class="pwd-submit" onclick="checkPwd('day2')">确认</button>
-            <div class="warn-text" id="warn-day2"></div>
-        </div>
-        <div id="content-day2" style="display:none;">
-            <h3>【日记日期：20XX‑04‑05】</h3>
-            <div class="diary-img-wrap">
-                <img class="diary-img" src="diary_02.jpg" alt="日记本扫描页">
-            </div>
-            <div class="block-title">📖 当日日记内容</div>
-            <div class="diary-content">
-                我偷偷下载了PPT文件，把一些秘密藏在黑白图层里面。只有切换显示模式，才能看见被盖住的文字。
-            </div>
-            <div class="block-title">💭 当日心情</div>
-            <div class="diary-mood">
-                害怕被发现，只能用这种隐蔽的方式留下记录。
-            </div>
-            <div class="clue-block">
-                <div class="clue-title">🔍 线索谜题二</div>
-                <p>提示：需要打开配套PPT，切换黑白模式，寻找隐藏的数字信息。</p>
-            </div>
-        </div>
-    </div>
+<main class="layout">
+  <aside class="side" id="sideLeft" data-title="◤ 左侧留言板 ◢"></aside>
+  <section id="center"></section>
+  <aside class="side" id="sideRight" data-title="◤ 右侧留言板 ◢"></aside>
+</main>
 
-    <!-- ========== 线索3 day3 ========== -->
-    <div class="diary-card" id="day3">
-        <div class="lock-box" id="lock-day3">
-            <h4>🔒 该日记碎片已加密，请输入密码解锁</h4>
-            <input type="text" class="pwd-input" id="pwd-day3" placeholder="输入密码">
-            <button class="pwd-submit" onclick="checkPwd('day3')">确认</button>
-            <div class="warn-text" id="warn-day3"></div>
-        </div>
-        <div id="content-day3" style="display:none;">
-            <h3>【日记日期：20XX‑05‑18】</h3>
-            <div class="diary-img-wrap">
-                <img class="diary-img" src="diary_03.jpg" alt="日记本扫描页">
-            </div>
-            <div class="block-title">📖 当日日记内容</div>
-            <div class="diary-content">
-                我把部分留言留在论坛的旧帖子回复区。有些文字被折叠，要仔细阅读才能捕捉关键信息。
-            </div>
-            <div class="block-title">💭 当日心情</div>
-            <div class="diary-mood">
-                只能对着虚拟的网络倾诉，现实里没有人愿意听。
-            </div>
-            <div class="clue-block">
-                <div class="clue-title">🔍 线索谜题三</div>
-                <p>提示：浏览论坛回复区，寻找被隐藏的文字碎片，拼接得到关键密码。</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========== 线索4 day4 ========== -->
-    <div class="diary-card" id="day4">
-        <div class="lock-box" id="lock-day4">
-            <h4>🔒 该日记碎片已加密，请输入密码解锁</h4>
-            <input type="text" class="pwd-input" id="pwd-day4" placeholder="输入密码">
-            <button class="pwd-submit" onclick="checkPwd('day4')">确认</button>
-            <div class="warn-text" id="warn-day4"></div>
-        </div>
-        <div id="content-day4" style="display:none;">
-            <h3>【日记日期：20XX‑06‑02】</h3>
-            <div class="diary-img-wrap">
-                <img class="diary-img" src="diary_04.jpg" alt="日记本扫描页">
-            </div>
-            <div class="block-title">📖 当日日记内容</div>
-            <div class="diary-content">
-                我开始幻想结局。有两种可能性，一种是困在原地，一种是慢慢和自己和解。
-            </div>
-            <div class="block-title">💭 当日心情</div>
-            <div class="diary-mood">
-                期盼改变，但又清楚现实很难。
-            </div>
-            <div class="clue-block">
-                <div class="clue-title">🔍 线索谜题四</div>
-                <p>提示：汇总前面全部线索，组合密码，解锁两个结局页面。</p>
-            </div>
-        </div>
-    </div>
-
-    <button class="back-btn" onclick="location.href='index.html'">返回首页</button>
-</div>
+<footer class="footer">
+  ⓒ 2003-2026 时光日记本论坛 · Powered by 回忆引擎 v1.0<br>
+  本站所有日记内容均为个人记录，请勿转载 · <a href="#">返回顶部</a>
+</footer>
 
 <script>
-// ========== 游戏全局配置 ==========
-// 在这里修改每条线索的正确密码！！
-const PWD_MAP = {
-    day1:"0304",
-    day2:"1025",
-    day3:"1101",
-    day4:"0927"
-};
-// 每个线索单独记录错误次数
-let wrongCount = {
-    day1:0,
-    day2:0,
-    day3:0,
-    day4:0
-};
-// SAN值 全局，和index.html互通
-let sanValue = Number(localStorage.getItem("san")) || 100;
+/* ══════════════════════════════════════════════
+   基础工具
+   ══════════════════════════════════════════════ */
+const $ = s => document.querySelector(s);
 
-// 更新SAN显示
-function updateSanUI(){
-    document.getElementById("san-value").innerText = sanValue;
-    document.getElementById("san-fill").style.width = sanValue + "%";
-    localStorage.setItem("san",sanValue);
-    if(sanValue <= 30){
-        document.body.classList.add("san‑danger");
-    }else{
-        document.body.classList.remove("san‑danger");
-    }
+function mulberry32(a){
+  return function(){
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                  .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function setPath(obj, path, val){
+  const parts = path.split('.'); let o = obj;
+  for(let i=0;i<parts.length-1;i++){
+    const k = parts[i];
+    if(o[k] === undefined) return;
+    o = o[k];
+  }
+  o[parts[parts.length-1]] = val;
+}
+function getPath(obj, path){
+  return path.split('.').reduce((o,k)=> (o==null? o : o[k]), obj);
+}
+function nowStr(){
+  const d = new Date(), p = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
 }
 
-// 校验密码
-function checkPwd(dayId){
-    const inputDom = document.getElementById("pwd-"+dayId);
-    const warnDom = document.getElementById("warn-"+dayId);
-    const lockDom = document.getElementById("lock-"+dayId);
-    const contentDom = document.getElementById("content-"+dayId);
-    const userInput = inputDom.value.trim();
-    const correctPwd = PWD_MAP[dayId];
+/* ══════════════════════════════════════════════
+   字体选项
+   ══════════════════════════════════════════════ */
+const FONTS = [
+  {name:'微软雅黑', css:"'Microsoft YaHei','PingFang SC',sans-serif"},
+  {name:'宋体',     css:"SimSun,'Songti SC',serif"},
+  {name:'楷体',     css:"KaiTi,'STKaiti','Kaiti SC',serif"},
+  {name:'黑体',     css:"SimHei,'Heiti SC',sans-serif"},
+  {name:'漫画体',   css:"'Comic Sans MS','Chalkboard SE',cursive"},
+  {name:'等宽',     css:"Consolas,'Courier New',monospace"}
+];
 
-    if(userInput === correctPwd){
-        // 密码正确，解锁
-        lockDom.style.display = "none";
-        contentDom.style.display = "block";
-        warnDom.innerText = "";
-        wrongCount[dayId] = 0;
-    }else{
-        //密码错误
-        wrongCount[dayId] += 1;
-        warnDom.innerText = `密码错误！错误次数：${wrongCount[dayId]}/3`;
-        inputDom.value = "";
-        // 累计3次错误，SAN暴跌
-        if(wrongCount[dayId] >= 3){
-            sanValue -= 35;
-            if(sanValue <0) sanValue = 0;
-            warnDom.innerText = "⚠️ 三次密码错误！SAN值剧烈下跌！";
-            updateSanUI();
-            // 错误次数重置，防止无限掉san
-            wrongCount[dayId] = 0;
-        }
+/* ══════════════════════════════════════════════
+   手写日记本 SVG 生成器
+   ══════════════════════════════════════════════ */
+function doodleSVG(type, x, y, c, ink){
+  const t = type || 'star';
+  if(t === 'flower'){
+    let p = '';
+    for(let i=0;i<5;i++){
+      p += `<ellipse cx="0" cy="-15" rx="8" ry="14" fill="${c}" transform="rotate(${i*72})"/>`;
     }
+    return `<g transform="translate(${x},${y})" opacity=".9">${p}
+      <circle r="7" fill="#ffe066" stroke="${ink}" stroke-width="1.2"/></g>`;
+  }
+  if(t === 'heart'){
+    return `<path d="M${x} ${y+8} C ${x-24} ${y-14}, ${x-7} ${y-32}, ${x} ${y-14}
+      C ${x+7} ${y-32}, ${x+24} ${y-14}, ${x} ${y+8} Z"
+      fill="${c}" stroke="${ink}" stroke-width="1.2" opacity=".9"/>`;
+  }
+  if(t === 'moon'){
+    return `<path d="M${x} ${y-26} a 22 22 0 1 0 17 36 a 18 18 0 1 1 -17 -36 Z"
+      fill="${c}" stroke="${ink}" stroke-width="1.2" opacity=".9"/>`;
+  }
+  if(t === 'cloud'){
+    return `<path d="M${x-34} ${y} q 0 -19 19 -17 q 4 -17 23 -13 q 17 -6 23 11
+      q 17 0 15 19 Z" fill="${c}" stroke="${ink}" stroke-width="1.2" opacity=".85"/>`;
+  }
+  // star
+  const pts = [];
+  for(let i=0;i<10;i++){
+    const r = (i % 2) ? 8 : 21;
+    const a = -Math.PI/2 + i * Math.PI/5;
+    pts.push(`${(x+Math.cos(a)*r).toFixed(1)},${(y+Math.sin(a)*r).toFixed(1)}`);
+  }
+  return `<polygon points="${pts.join(' ')}" fill="${c}" stroke="${ink}" stroke-width="1.2" opacity=".9"/>`;
 }
 
-// 时间按钮切换逻辑
-const btns = document.querySelectorAll('.time-btn');
-const cards = document.querySelectorAll('.diary-card');
-btns.forEach(btn=>{
-    btn.addEventListener('click',()=>{
-        btns.forEach(b=>b.classList.remove('active'));
-        cards.forEach(c=>c.classList.remove('show'));
-        btn.classList.add('active');
-        const targetId = btn.dataset.id;
-        document.getElementById(targetId).classList.add('show');
-    })
-})
+function makeDiary(cfg){
+  const W = 560, H = 760;
+  const R = mulberry32(cfg.seed * 9973 + 17);
+  const ink = cfg.ink, paper = cfg.paper, accent = cfg.accent;
+  let s = '';
 
-//页面加载初始化
-updateSanUI();
-// 默认展示day1卡片
-document.getElementById("day1").classList.add("show");
+  s += `<rect width="${W}" height="${H}" fill="#cdd7e5"/>`;
+  s += `<rect width="${W}" height="${H}" fill="url(#desk)"/>`;
+
+  const rot = (R() - 0.5) * 2.4;
+  s += `<g transform="rotate(${rot.toFixed(2)} ${W/2} ${H/2})">`;
+  s += `<rect x="36" y="28" width="${W-72}" height="${H-64}" rx="3"
+          fill="${paper}" stroke="#b6c3d4" stroke-width="2"/>`;
+
+  // 横线
+  for(let y = 212; y < H-84; y += 38){
+    s += `<line x1="92" y1="${y}" x2="${W-72}" y2="${y}" stroke="#d7e4f2" stroke-width="1.3"/>`;
+  }
+  // 红色边线
+  s += `<line x1="86" y1="34" x2="86" y2="${H-40}" stroke="#f2a8b8" stroke-width="1.4" opacity=".85"/>`;
+  // 装订孔
+  for(let y = 92; y < H-70; y += 92){
+    s += `<circle cx="56" cy="${y}" r="7" fill="#cdd7e5" stroke="#b0bccd"/>`;
+  }
+
+  // 日期
+  s += `<text x="100" y="142" font-family="KaiTi,STKaiti,serif" font-size="27"
+          fill="${ink}">${esc(cfg.dateText)}</text>`;
+  s += `<path d="M98 154 q 96 7 196 0" fill="none" stroke="${ink}"
+          stroke-width="1.5" opacity=".45"/>`;
+
+  // 正文波浪线
+  const total = 11 + Math.floor(R() * 4);
+  for(let i = 0; i < total; i++){
+    const lineY = 212 + i * 38;
+    if(lineY > H - 90) break;
+    const startX = 92 + R() * 10;
+    const endX = startX + (0.45 + R() * 0.5) * (W - 168);
+    let d = `M${startX.toFixed(1)} ${lineY.toFixed(1)}`;
+    let x = startX;
+    while(x < endX){
+      const step = 9 + R() * 11;
+      const dy = (R() - 0.5) * 7;
+      d += ` q ${(step/2).toFixed(1)} ${dy.toFixed(1)} ${step.toFixed(1)} 0`;
+      x += step;
+    }
+    s += `<path d="${d}" fill="none" stroke="${ink}" stroke-width="1.7"
+            stroke-linecap="round" opacity="${(0.6 + R()*0.3).toFixed(2)}"/>`;
+  }
+
+  // 涂鸦
+  s += doodleSVG(cfg.doodle, W - 128, H - 118, accent, ink);
+
+  // 胶带
+  s += `<g transform="rotate(-7 ${W/2} 40)">
+          <rect x="${W/2 - 62}" y="16" width="124" height="30" fill="${accent}" opacity=".42"/>
+        </g>`;
+
+  s += `</g>`;
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"
+      viewBox="0 0 ${W} ${H}">
+      <defs>
+        <linearGradient id="desk" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#dbe4ef"/>
+          <stop offset="100%" stop-color="#bfcbdb"/>
+        </linearGradient>
+      </defs>${s}</svg>`;
+
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+
+/* 每个时代的照片配置 */
+const PHOTO_CFG = [
+  [ // 小学
+    {seed:11, ink:'#3a4ea8', paper:'#fffdf4', accent:'#ff9ec4', dateText:'2003.6.15  星期日  晴', doodle:'flower'},
+    {seed:23, ink:'#c2456f', paper:'#fff9fb', accent:'#ffd166', dateText:'2003.6.15  心情',       doodle:'heart'}
+  ],
+  [ // 高中
+    {seed:37, ink:'#2b3a4a', paper:'#fdf8ec', accent:'#8fd3c7', dateText:'2010.11.20  星期六  多云', doodle:'moon'},
+    {seed:41, ink:'#4a3b6b', paper:'#f4f0ff', accent:'#b7a6ff', dateText:'2010.11.20  晚  有月亮',   doodle:'star'}
+  ],
+  [ // 大学
+    {seed:53, ink:'#274b4a', paper:'#f6fffb', accent:'#7fd8c3', dateText:'2014.9.6  星期六  晴',  doodle:'cloud'},
+    {seed:67, ink:'#3c3a6b', paper:'#fbf8ff', accent:'#ffb3d1', dateText:'2014.9.6  夜  图书馆',   doodle:'star'}
+  ],
+  [ // 毕业
+    {seed:71, ink:'#3a3f4a', paper:'#f5f6f8', accent:'#ffb26b', dateText:'2018.7.14  星期六  阴', doodle:'star'},
+    {seed:89, ink:'#5a3a3a', paper:'#fdf7f5', accent:'#ff8f7a', dateText:'2018.7.14  深夜',       doodle:'heart'}
+  ]
+];
+const photoCache = {};
+function photoFor(eraIdx, which){
+  const key = eraIdx + '-' + which;
+  if(!photoCache[key]) photoCache[key] = makeDiary(PHOTO_CFG[eraIdx][which]);
+  return photoCache[key];
+}
+
+/* ══════════════════════════════════════════════
+   默认数据
+   ══════════════════════════════════════════════ */
+const DEFAULT_STATE = {
+  current: 0,
+  leftNotes: ['★ 路过留个爪印～', '这帖是2003年的老帖了，居然还在。'],
+  rightNotes: ['✎ 悄悄话可以贴在右边', '请不要剧透后面的内容哦！'],
+  eras: [
+    /* ── ① 小学 ── */
+    {
+      label: '小学 · 2003',
+      poster: '草莓味的小鱼',
+      level: 'Lv.1 新手上路',
+      posts: 3,
+      reg: '2003-03-02',
+      date: '2003-06-15 19:42',
+      title: '【日记本】今天老师表扬我啦！（第一页）',
+      cap1: '日记本 P.1 —— 藏在床底下月饼盒里的那本',
+      cap2: '日记本 P.2 —— 粉色圆珠笔写的，有点糊',
+      diary:
+`今天数学考了一百分！老师在全班面前念我的名字，我的脸好烫好烫。
+妈妈下班的时候给我买了一支粉色圆珠笔，笔帽上有个小草莓。
+我用它在日记本上画了一朵花，画得不太好，但是我很喜欢。
+这个本子我要藏起来，藏在床底下那个装月饼的铁盒子里。
+里面写的都是秘密，谁都不许看！！！`,
+      mood:
+`超级超级开心！★★★★★
+希望明天也能考一百分。
+（还有，我同桌借我的橡皮到现在还没还……生气 (｀へ´)）`,
+      replies: [
+        {name:'小圆饼干', text:'哈哈你好可爱，一百分好厉害！我上次只有 92 分 555', date:'2003-06-15 20:15'},
+        {name:'路人甲',   text:'这个论坛居然还有人用手写日记本，怀念。', date:'2003-06-15 21:03'}
+      ],
+      attachments: [{name:'六年级作文《我的妈妈》.doc', url:'#'}],
+      theme: {bg:'#eaf6ff', ink:'#1f3f6e', font:2}
+    },
+
+    /* ── ② 高中 ── */
+    {
+      label: '高中 · 2010',
+      poster: '草莓味的小鱼',
+      level: 'Lv.4 常驻居民',
+      posts: 128,
+      reg: '2003-03-02',
+      date: '2010-11-20 23:51',
+      title: '【日记本】67分，我把它折起来夹进了本子里',
+      cap1: '日记本 P.57 —— 那一页有折痕',
+      cap2: '日记本 P.58 —— 写了一半就停住了',
+      diary:
+`晚自习上到十点半，教室的灯一盏一盏灭掉。
+今天月考卷子发下来，67 分。我把分数那一栏折起来，夹进日记本里，
+不想让任何人看见。
+回宿舍的路上，月亮特别亮，亮得像小学时候那支粉色的笔。
+我在心里对自己说：再坚持一下，我想去那个有海的城市。`,
+      mood:
+`有点累。★★★☆☆
+但是我不想放弃。
+今天在日记本最后一页写了一个日期，是三年后的今天。
+到时候再回来看吧。`,
+      replies: [
+        {name:'夜跑的风', text:'67 分也不差啦，加油！我也想考去南边。', date:'2010-11-21 00:12'},
+        {name:'匿名',     text:'你也要考那所有海的大学吗？', date:'2010-11-21 07:40'}
+      ],
+      attachments: [
+        {name:'高三复习计划.xls', url:'#'},
+        {name:'月考成绩单（勿传）.doc', url:'#'}
+      ],
+      theme: {bg:'#fdf6e3', ink:'#4a3b2a', font:1}
+    },
+
+    /* ── ③ 大学 ── */
+    {
+      label: '大学 · 2014',
+      poster: '草莓味的小鱼',
+      level: 'Lv.6 论坛元老',
+      posts: 542,
+      reg: '2003-03-02',
+      date: '2014-09-06 22:07',
+      title: '【日记本】搬进宿舍的第一天，翻出了小学的本子',
+      cap1: '日记本 P.103 —— 纸已经黄了',
+      cap2: '日记本 P.104 —— 图书馆四楼写的',
+      diary:
+`今天搬进宿舍，床铺靠窗，能看到操场。
+收拾行李的时候翻出了小学的日记本，纸已经黄了，粉色的字迹还在。
+我在最后一页的空白处写了新的名字。
+下午在图书馆四楼坐了很久，写了一整个下午。窗外有很多很多的云。`,
+      mood:
+`平静，也有点慌。★★★★☆
+原来时间可以过得这么快。
+那本日记本，我打算一直带着。`,
+      replies: [
+        {name:'四楼靠窗', text:'我也在图书馆四楼！说不定我们擦肩而过过。', date:'2014-09-06 22:30'},
+        {name:'薄荷汽水', text:'你的日记本保存得真好，我的早就丢了……', date:'2014-09-07 09:15'}
+      ],
+      attachments: [
+        {name:'新生入学指南.ppt', url:'#'},
+        {name:'社团招新海报.jpg', url:'#'}
+      ],
+      theme: {bg:'#f3eefc', ink:'#3b2d5e', font:0}
+    },
+
+    /* ── ④ 毕业后 ── */
+    {
+      label: '毕业后 · 2018',
+      poster: '草莓味的小鱼',
+      level: 'Lv.9 传说级',
+      posts: 1024,
+      reg: '2003-03-02',
+      date: '2018-07-14 01:26',
+      title: '【日记本】四本日记排成一排，我发现了一件事',
+      cap1: '日记本 P.201 —— 最后一页',
+      cap2: '日记本 P.202 —— 那一句话',
+      diary:
+`租的房子很小，一个房间一个阳台。
+今天去面试，HR 问我大学学了什么。我愣了一下，突然想起来那本日记。
+晚上回来，我把四本日记本从箱子里拿出来，排成一排。
+然后我发现——每一本的最后一页，都写着同一句话。`,
+      mood:
+`……
+（今天不想写心情。）
+（但是那句话，我好像终于明白是什么意思了。）`,
+      replies: [
+        {name:'深夜刷论坛', text:'等等，同一句话？？是什么啊！', date:'2018-07-14 01:40'},
+        {name:'守夜人',     text:'楼主快更新！！别断在这里啊！！', date:'2018-07-14 02:03'}
+      ],
+      attachments: [
+        {name:'简历_2018.doc', url:'#'},
+        {name:'租房合同.pdf', url:'#'}
+      ],
+      theme: {bg:'#e8ecf1', ink:'#2a2f3a', font:3}
+    }
+  ]
+};
+
+/* ══════════════════════════════════════════════
+   状态存取
+   ══════════════════════════════════════════════ */
+const KEY = 'arg_diary_forum_v1';
+let state;
+
+function loadState(){
+  const base = JSON.parse(JSON.stringify(DEFAULT_STATE));
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(!raw) return base;
+    const p = JSON.parse(raw);
+    if(typeof p.current === 'number') base.current = p.current;
+    if(Array.isArray(p.leftNotes))  base.leftNotes  = p.leftNotes;
+    if(Array.isArray(p.rightNotes)) base.rightNotes = p.rightNotes;
+    if(Array.isArray(p.eras)){
+      p.eras.forEach((e, i)=>{
+        if(!base.eras[i]) return;
+        const theme = Object.assign({}, base.eras[i].theme, e.theme || {});
+        Object.assign(base.eras[i], e);
+        base.eras[i].theme = theme;
+      });
+    }
+  }catch(err){ /* 忽略损坏的数据 */ }
+  return base;
+}
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(err){}
+}
+
+/* ══════════════════════════════════════════════
+   渲染
+   ══════════════════════════════════════════════ */
+const timelineEl = $('#timeline');
+const centerEl   = $('#center');
+const sideLeftEl = $('#sideLeft');
+const sideRightEl= $('#sideRight');
+
+const AVATARS = [
+  {t:'🍪', c:'#f2a65a'}, {t:'🌙', c:'#7c6bd6'}, {t:'🐟', c:'#3fa9d6'},
+  {t:'🍀', c:'#4fbf8b'}, {t:'⭐', c:'#e2b13c'}, {t:'☁️', c:'#8fa6c9'},
+  {t:'🍧', c:'#ef7fa8'}, {t:'🎧', c:'#6b7fe0'}
+];
+
+function replyHTML(eraIdx, j, r){
+  const av = AVATARS[j % AVATARS.length];
+  return `
+  <div class="reply" data-ri="${j}">
+    <div class="r-avatar" style="background:${av.c}">${av.t}</div>
+    <div class="r-main">
+      <div class="r-top">
+        <span class="r-name" contenteditable data-key="eras.${eraIdx}.replies.${j}.name">${r.name}</span>
+        <span class="r-floor">${j + 1}楼</span>
+        <span class="r-time" contenteditable data-key="eras.${eraIdx}.replies.${j}.date">${r.date}</span>
+        <button class="mini-btn del" data-act="del-reply" data-ri="${j}">✕ 删除</button>
+      </div>
+      <div class="r-text" contenteditable data-key="eras.${eraIdx}.replies.${j}.text">${r.text}</div>
+    </div>
+  </div>`;
+}
+
+function renderEra(i){
+  const e = state.eras[i];
+  const theme = e.theme;
+  const fontCss = (FONTS[theme.font] || FONTS[0]).css;
+  const fontOpts = FONTS.map((f, k) =>
+    `<option value="${k}" ${k === theme.font ? 'selected' : ''}>${f.name}</option>`
+  ).join('');
+
+  const attachments = e.attachments.map((a, j) => `
+    <span class="attach">
+      <span class="attach-name" contenteditable
+        data-key="eras.${i}.attachments.${j}.name">${a.name}</span>
+      <a class="attach-open" href="${esc(a.url || '#')}" target="_blank" rel="noopener">打开 ↗</a>
+    </span>`).join('');
+
+  return `
+  <section class="era" data-era="${i}"
+    style="--era-bg:${theme.bg};--era-ink:${theme.ink};--era-font:${fontCss}">
+
+    <div class="toolbar">
+      <span class="tb-label">🎨 本页外观</span>
+      <label>背景色 <input type="color" data-theme="bg" value="${theme.bg}"></label>
+      <label>文字色 <input type="color" data-theme="ink" value="${theme.ink}"></label>
+      <label>字体
+        <select data-theme="font">${fontOpts}</select>
+      </label>
+      <button data-act="reset-theme">恢复默认外观</button>
+    </div>
+
+    <article class="post">
+      <div class="post-head">
+        <div class="avatar">✿</div>
+        <div class="who">
+          <span class="uname" contenteditable data-key="eras.${i}.poster">${e.poster}</span>
+          <span class="badge">楼主</span>
+          <div class="meta">等级：${e.level} · 帖数：${e.posts} · 注册：${e.reg}</div>
+        </div>
+        <div class="post-time" contenteditable data-key="eras.${i}.date">${e.date}</div>
+      </div>
+
+      <h2 class="post-title" contenteditable data-key="eras.${i}.title">${e.title}</h2>
+
+      <!-- 第一段：电子日记 -->
+      <div class="section">
+        <div class="sec-tag">① 电子日记 · 今天写了什么</div>
+        <div class="sec-body" contenteditable data-key="eras.${i}.diary">${e.diary}</div>
+        <figure class="photo">
+          <img src="${photoFor(i, 0)}" alt="日记本照片 1">
+          <figcaption contenteditable data-key="eras.${i}.cap1">${e.cap1}</figcaption>
+        </figure>
+      </div>
+
+      <!-- 第二段：当天心情 -->
+      <div class="section">
+        <div class="sec-tag">② 今天的心情</div>
+        <div class="sec-body" contenteditable data-key="eras.${i}.mood">${e.mood}</div>
+        <figure class="photo">
+          <img src="${photoFor(i, 1)}" alt="日记本照片 2">
+          <figcaption contenteditable data-key="eras.${i}.cap2">${e.cap2}</figcaption>
+        </figure>
+      </div>
+
+      <div class="attachments">
+        <span>📎 附件：</span>
+        ${attachments || '<span style="opacity:.5">暂无附件</span>'}
+        <button class="mini-btn" style="width:auto;padding:3px 12px;"
+          data-act="add-attach">＋ 插入外部链接（PPT / Word 等）</button>
+      </div>
+    </article>
+
+    <div class="replies-head">💬 回帖（${e.replies.length}）</div>
+    <div class="replies">
+      ${e.replies.map((r, j) => replyHTML(i, j, r)).join('')}
+    </div>
+    <button class="add-reply" data-act="add-reply">＋ 我要回复</button>
+  </section>`;
+}
+
+function renderSide(el, notes, key){
+  el.innerHTML = `
+    <div class="side-title">${el.dataset.title}</div>
+    <div class="notes">
+      ${notes.map((n, i) =>
+        `<div class="note" contenteditable data-key="${key}.${i}">${n}</div>`
+      ).join('')}
+    </div>
+    <button class="mini-btn" data-side="${key}">＋ 贴一张新便签</button>`;
+}
+
+function renderApp(){
+  timelineEl.innerHTML = state.eras.map((e, i) =>
+    `<button class="tl-btn ${i === state.current ? 'active' : ''}"
+      data-idx="${i}">${esc(e.label)}</button>`
+  ).join('');
+
+  renderSide(sideLeftEl,  state.leftNotes,  'leftNotes');
+  renderSide(sideRightEl, state.rightNotes, 'rightNotes');
+
+  centerEl.innerHTML = renderEra(state.current);
+}
+
+/* ══════════════════════════════════════════════
+   交互
+   ══════════════════════════════════════════════ */
+function collect(){
+  document.querySelectorAll('[data-key]').forEach(el => {
+    setPath(state, el.dataset.key, el.innerHTML);
+  });
+}
+
+function switchEra(i){
+  if(i === state.current) return;
+  collect();
+  state.current = i;
+  save();
+  renderApp();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function updateTheme(kind, value){
+  const era = state.eras[state.current];
+  era.theme[kind] = value;
+  const sec = centerEl.querySelector('.era');
+  if(sec){
+    if(kind === 'bg')   sec.style.setProperty('--era-bg', value);
+    if(kind === 'ink')  sec.style.setProperty('--era-ink', value);
+    if(kind === 'font') sec.style.setProperty('--era-font', FONTS[value].css);
+  }
+  save();
+}
+
+function addReply(){
+  collect();
+  const era = state.eras[state.current];
+  era.replies.push({
+    name: '新来的访客',
+    text: '（在这里写下你的回复……）',
+    date: nowStr()
+  });
+  save();
+  renderApp();
+  const list = centerEl.querySelectorAll('.reply');
+  const last = list[list.length - 1];
+  if(last){
+    const t = last.querySelector('.r-text');
+    t.focus();
+    const r = document.createRange();
+    r.selectNodeContents(t);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(r);
+  }
+}
+
+function delReply(j){
+  collect();
+  const era = state.eras[state.current];
+  if(era.replies.length <= 1 && !confirm('这是最后一条回复，确定要删除吗？')) return;
+  era.replies.splice(j, 1);
+  save();
+  renderApp();
+}
+
+function addAttach(){
+  collect();
+  const name = prompt('附件名称（例如：我的日记扫描件.doc / 线索整理.ppt）');
+  if(!name) return;
+  const url = prompt('链接地址（可以是 https://… 或本地文件名）', '#');
+  state.eras[state.current].attachments.push({name, url: url || '#'});
+  save();
+  renderApp();
+}
+
+function resetTheme(){
+  const def = DEFAULT_STATE.eras[state.current].theme;
+  state.eras[state.current].theme = Object.assign({}, def);
+  save();
+  renderApp();
+}
+
+function addNote(key){
+  collect();
+  state[key].push('（新便签）');
+  save();
+  renderApp();
+  const side = key === 'leftNotes' ? sideLeftEl : sideRightEl;
+  const notes = side.querySelectorAll('.note');
+  const last = notes[notes.length - 1];
+  if(last){
+    last.focus();
+    const r = document.createRange();
+    r.selectNodeContents(last);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(r);
+  }
+}
+
+/* ── 事件绑定（统一委托） ── */
+document.addEventListener('input', e => {
+  const t = e.target;
+
+  // 主题：颜色 / 字体
+  if(t.dataset && t.dataset.theme){
+    if(t.dataset.theme === 'font') updateTheme('font', Number(t.value));
+    else updateTheme(t.dataset.theme, t.value);
+    return;
+  }
+
+  // 可编辑内容
+  const el = t.closest && t.closest('[data-key]');
+  if(el){
+    setPath(state, el.dataset.key, el.innerHTML);
+    save();
+  }
+});
+
+document.addEventListener('click', e => {
+  const tl = e.target.closest('.tl-btn');
+  if(tl){ switchEra(Number(tl.dataset.idx)); return; }
+
+  const actEl = e.target.closest('[data-act]');
+  if(actEl){
+    const act = actEl.dataset.act;
+    if(act === 'add-reply')    addReply();
+    if(act === 'del-reply')    delReply(Number(actEl.dataset.ri));
+    if(act === 'add-attach')   addAttach();
+    if(act === 'reset-theme')  resetTheme();
+    return;
+  }
+
+  const sideBtn = e.target.closest('[data-side]');
+  if(sideBtn){ addNote(sideBtn.dataset.side); return; }
+});
+
+/* ══════════════════════════════════════════════
+   启动
+   ══════════════════════════════════════════════ */
+state = loadState();
+renderApp();
 </script>
 </body>
 </html>
