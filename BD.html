@@ -1,134 +1,384 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>日记碎片</title>
+    <title>空白页日记 - 旧论坛碎片</title>
     <style>
         * {
-            margin:0;
-            padding:0;
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
+            font-family: "Microsoft YaHei", serif;
         }
-        body{
-            background-color:#f3f1ed;
-            color:#222222;
-            font-family: "SimSun",serif;
-            padding:3rem;
-            line-height:2;
-            transition:0.8s all;
+        body {
+            background-color: #f3f1e9;
+            color:#222;
+            line-height:1.7;
+            padding:20px;
+            transition: background 0.6s;
         }
-        h2{
-            margin-bottom:24px;
+        .forum-container{
+            max-width:900px;
+            margin:0 auto;
+            background:#fff;
+            border:1px solid #bbb;
+            padding:24px;
+            box-shadow:0 2px 8px #00000022;
+        }
+        .forum-header{
+            border-bottom:2px solid #999;
+            padding-bottom:12px;
+            margin-bottom:20px;
+        }
+        .forum-title{
+            font-size:22px;
+            color:#333;
+        }
+        .san-bar-wrap{
+            margin:10px 0;
+            padding:8px;
+            background:#eee;
+            border-radius:4px;
+        }
+        .san-label{
+            font-size:14px;
+        }
+        .san-bar{
+            height:12px;
+            width:100%;
+            background:#ddd;
+            margin-top:4px;
+            overflow:hidden;
+        }
+        .san-fill{
+            height:100%;
+            background:#448844;
+            transition:width 0.4s;
+        }
+        .time-nav{
+            margin:16px 0;
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+        .time-btn{
+            padding:6px 14px;
+            border:1px solid #777;
+            background:#e9e5da;
+            cursor:pointer;
+            border-radius:4px;
+        }
+        .time-btn.active{
+            background:#b8a88c;
+            color:white;
+        }
+        .diary-card{
+            display:none;
+            border:1px solid #ccc;
+            padding:20px;
+            margin-bottom:20px;
+            background:#faf7f0;
+        }
+        .diary-card.show{
+            display:block;
+        }
+        .lock-box{
+            padding:20px;
+            border:1px dashed #996655;
+            background:#f7f2e8;
+            text-align:center;
+        }
+        .pwd-input{
+            padding:8px 12px;
+            width:220px;
+            font-size:16px;
+            margin:10px 0;
+        }
+        .pwd-submit{
+            padding:8px 18px;
+            background:#776954;
+            color:#fff;
+            border:none;
+            cursor:pointer;
+        }
+        .warn-text{
+            color:#b32424;
+            font-weight:bold;
+            margin-top:8px;
+        }
+        .diary-img-wrap{
+            text-align:center;
+            margin:16px 0;
+        }
+        .diary-img{
+            max-width:100%;
+            max-height:420px;
+            border:1px solid #999;
+            padding:4px;
+            background:#fff;
+        }
+        .block-title{
+            font-weight:bold;
+            font-size:17px;
+            margin:12px 0 6px;
+            color:#444;
+        }
+        .diary-content{
+            margin-bottom:18px;
+        }
+        .diary-mood{
+            background:#f0ebe0;
+            padding:12px;
+            border-left:4px solid #998870;
+            margin-bottom:18px;
         }
         .clue-block{
-            margin:20px 0;
-            padding:16px;
-            border:1px solid #ccc;
-            max-width:700px;
+            margin-top:20px;
+            padding:14px;
+            background:#e8e2d5;
+            border:1px dashed #887766;
         }
-        button{
-            padding:8px 14px;
+        .clue-title{
+            font-weight:bold;
+        }
+        .back-btn{
+            margin-top:20px;
+            padding:8px 16px;
+            background:#776954;
+            color:#fff;
+            border:none;
             cursor:pointer;
-            margin:8px;
         }
-        a{
-            color:#774444;
+        /* SAN暴跌后的视觉效果 */
+        .san‑danger{
+            background-color:#2c1a1a;
+            color:#e9c9c9;
         }
-        /* SAN档位抖动闪烁动画 */
-        body.sanMid *{
-            animation: shakeSmall 4s infinite alternate ease-in-out;
-        }
-        body.sanLow *{
-            animation: shakeMid 2.5s infinite alternate ease-in-out, flicker 3s infinite;
-        }
-        body.sanCritical *{
-            animation: shakeHard 1.2s infinite alternate ease-in-out, flickerStrong 1.8s infinite;
-        }
-        @keyframes shakeSmall {
-            0% { transform: translate(0px,0px); }
-            100% { transform: translate(0.7px,0.4px); }
-        }
-        @keyframes shakeMid {
-            0% { transform: translate(-1.2px,-0.6px); }
-            100% { transform: translate(1.2px,0.6px); }
-        }
-        @keyframes shakeHard {
-            0% { transform: translate(-3px,-2px); }
-            50% { transform: translate(2px,1px); }
-            100% { transform: translate(-2px,2px); }
-        }
-        @keyframes flicker {
-            0%,92%,100% { opacity: 1; }
-            95% { opacity: 0.92; }
-        }
-        @keyframes flickerStrong {
-            0%, 86%, 94%,100% { opacity: 1; }
-            90% { opacity:0.6; }
+        .san‑danger .forum-container{
+            background:#442c2c;
+            border-color:#774444;
         }
     </style>
 </head>
 <body>
-    <h2>日记碎片记录</h2>
-    <p>当前SAN值：<span id="sanValue">100</span></p>
-
-    <div class="clue-block">
-        <p>【线索1】一段母亲的指责文字</p>
-        <button onclick="readClue(15)">阅读记录 【-15 SAN】</button>
-    </div>
-    <div class="clue-block">
-        <p>【线索2】隐藏彩蛋：母亲私人日记</p>
-        <button onclick="readClue(20)">翻阅母亲日记【-20 SAN】</button>
-    </div>
-    <div class="clue-block">
-        <p>【线索3】PPT代做兼职记录，提示密码藏于《晴天》吉他谱</p>
-        <button onclick="readClue(10)">查看兼职笔记【-10 SAN】</button>
-    </div>
-    <div class="clue-block">
-        <p>【线索4】大学兼职：PPT代做项目笔记（黑白隐藏文字解谜）</p>
-        <button onclick="readClue(8)">打开PPT文档【-8 SAN】</button>
-        <p><a href="pptClue.html">进入PPT解谜页面</a></p>
+<div class="forum-container">
+    <div class="forum-header">
+        <h2 class="forum-title">匿名旧论坛｜遗失的日记碎片</h2>
+        <p>帖子发布者：匿名用户 | 浏览记录：碎片化存档</p>
+        <div class="san-bar-wrap">
+            <div class="san-label">SAN值：<span id="san-value">100</span></div>
+            <div class="san-bar">
+                <div id="san-fill" class="san-fill" style="width:100%"></div>
+            </div>
+        </div>
     </div>
 
-    <br>
-    <p>✅ 拿到吉他密码之后前往解锁页面：<a href="password.html">密码解锁入口</a></p>
-    <br>
-    <p><a href="index.html">← 返回首页</a></p>
+    <!-- 时间导航按钮 -->
+    <div class="time-nav">
+        <button class="time-btn active" data-id="day1">线索一：03‑12</button>
+        <button class="time-btn" data-id="day2">线索二：04‑05</button>
+        <button class="time-btn" data-id="day3">线索三：05‑18</button>
+        <button class="time-btn" data-id="day4">线索四：06‑02</button>
+    </div>
+
+    <!-- ========== 线索1 day1 ========== -->
+    <div class="diary-card" id="day1">
+        <!-- 锁定区域，未解锁显示密码框 -->
+        <div class="lock-box" id="lock-day1">
+            <h4>🔒 该日记碎片已加密，请输入密码解锁</h4>
+            <input type="text" class="pwd-input" id="pwd-day1" placeholder="输入密码">
+            <button class="pwd-submit" onclick="checkPwd('day1')">确认</button>
+            <div class="warn-text" id="warn-day1"></div>
+        </div>
+        <!-- 解锁后才展示日记内容 -->
+        <div id="content-day1" style="display:none;">
+            <h3>【日记日期：20XX‑03‑12】</h3>
+            <div class="diary-img-wrap">
+                <img class="diary-img" src="diary_01.jpg" alt="日记本扫描页">
+            </div>
+            <div class="block-title">📖 当日日记内容</div>
+            <div class="diary-content">
+                今天家里又发生争吵。我躲在房间里，把本子藏进抽屉。很多话不敢写在明面，只能写在夹缝里。
+            </div>
+            <div class="block-title">💭 当日心情</div>
+            <div class="diary-mood">
+                很压抑。想逃出去，可是没有地方可以去。
+            </div>
+            <div class="clue-block">
+                <div class="clue-title">🔍 线索谜题一</div>
+                <p>提示：日记本页面角落有一串隐晦符号，需要结合吉他乐谱来破解密码。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 线索2 day2 ========== -->
+    <div class="diary-card" id="day2">
+        <div class="lock-box" id="lock-day2">
+            <h4>🔒 该日记碎片已加密，请输入密码解锁</h4>
+            <input type="text" class="pwd-input" id="pwd-day2" placeholder="输入密码">
+            <button class="pwd-submit" onclick="checkPwd('day2')">确认</button>
+            <div class="warn-text" id="warn-day2"></div>
+        </div>
+        <div id="content-day2" style="display:none;">
+            <h3>【日记日期：20XX‑04‑05】</h3>
+            <div class="diary-img-wrap">
+                <img class="diary-img" src="diary_02.jpg" alt="日记本扫描页">
+            </div>
+            <div class="block-title">📖 当日日记内容</div>
+            <div class="diary-content">
+                我偷偷下载了PPT文件，把一些秘密藏在黑白图层里面。只有切换显示模式，才能看见被盖住的文字。
+            </div>
+            <div class="block-title">💭 当日心情</div>
+            <div class="diary-mood">
+                害怕被发现，只能用这种隐蔽的方式留下记录。
+            </div>
+            <div class="clue-block">
+                <div class="clue-title">🔍 线索谜题二</div>
+                <p>提示：需要打开配套PPT，切换黑白模式，寻找隐藏的数字信息。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 线索3 day3 ========== -->
+    <div class="diary-card" id="day3">
+        <div class="lock-box" id="lock-day3">
+            <h4>🔒 该日记碎片已加密，请输入密码解锁</h4>
+            <input type="text" class="pwd-input" id="pwd-day3" placeholder="输入密码">
+            <button class="pwd-submit" onclick="checkPwd('day3')">确认</button>
+            <div class="warn-text" id="warn-day3"></div>
+        </div>
+        <div id="content-day3" style="display:none;">
+            <h3>【日记日期：20XX‑05‑18】</h3>
+            <div class="diary-img-wrap">
+                <img class="diary-img" src="diary_03.jpg" alt="日记本扫描页">
+            </div>
+            <div class="block-title">📖 当日日记内容</div>
+            <div class="diary-content">
+                我把部分留言留在论坛的旧帖子回复区。有些文字被折叠，要仔细阅读才能捕捉关键信息。
+            </div>
+            <div class="block-title">💭 当日心情</div>
+            <div class="diary-mood">
+                只能对着虚拟的网络倾诉，现实里没有人愿意听。
+            </div>
+            <div class="clue-block">
+                <div class="clue-title">🔍 线索谜题三</div>
+                <p>提示：浏览论坛回复区，寻找被隐藏的文字碎片，拼接得到关键密码。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 线索4 day4 ========== -->
+    <div class="diary-card" id="day4">
+        <div class="lock-box" id="lock-day4">
+            <h4>🔒 该日记碎片已加密，请输入密码解锁</h4>
+            <input type="text" class="pwd-input" id="pwd-day4" placeholder="输入密码">
+            <button class="pwd-submit" onclick="checkPwd('day4')">确认</button>
+            <div class="warn-text" id="warn-day4"></div>
+        </div>
+        <div id="content-day4" style="display:none;">
+            <h3>【日记日期：20XX‑06‑02】</h3>
+            <div class="diary-img-wrap">
+                <img class="diary-img" src="diary_04.jpg" alt="日记本扫描页">
+            </div>
+            <div class="block-title">📖 当日日记内容</div>
+            <div class="diary-content">
+                我开始幻想结局。有两种可能性，一种是困在原地，一种是慢慢和自己和解。
+            </div>
+            <div class="block-title">💭 当日心情</div>
+            <div class="diary-mood">
+                期盼改变，但又清楚现实很难。
+            </div>
+            <div class="clue-block">
+                <div class="clue-title">🔍 线索谜题四</div>
+                <p>提示：汇总前面全部线索，组合密码，解锁两个结局页面。</p>
+            </div>
+        </div>
+    </div>
+
+    <button class="back-btn" onclick="location.href='index.html'">返回首页</button>
+</div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    let san = localStorage.getItem("san") ? Number(localStorage.getItem("san")) : 100;
-    const sanBox = document.getElementById("sanValue");
+// ========== 游戏全局配置 ==========
+// 在这里修改每条线索的正确密码！！
+const PWD_MAP = {
+    day1:"1234",
+    day2:"5678",
+    day3:"9012",
+    day4:"3456"
+};
+// 每个线索单独记录错误次数
+let wrongCount = {
+    day1:0,
+    day2:0,
+    day3:0,
+    day4:0
+};
+// SAN值 全局，和index.html互通
+let sanValue = Number(localStorage.getItem("san")) || 100;
 
-    function renderPageStyle(){
-        if(!sanBox) return;
-        sanBox.innerText = san;
-        //清除全部旧san class，防止样式叠加冲突
-        document.body.classList.remove("sanCritical","sanLow","sanMid");
+// 更新SAN显示
+function updateSanUI(){
+    document.getElementById("san-value").innerText = sanValue;
+    document.getElementById("san-fill").style.width = sanValue + "%";
+    localStorage.setItem("san",sanValue);
+    if(sanValue <= 30){
+        document.body.classList.add("san‑danger");
+    }else{
+        document.body.classList.remove("san‑danger");
+    }
+}
 
-        if(san <= 10){
-            document.body.classList.add("sanCritical");
-        }else if(san <=40){
-            document.body.classList.add("sanLow");
-        }else if(san <=70){
-            document.body.classList.add("sanMid");
-        }
-        // SAN归零，自动跳转坏结局
-        if(san <= 0){
-            location.href="badend.html";
+// 校验密码
+function checkPwd(dayId){
+    const inputDom = document.getElementById("pwd-"+dayId);
+    const warnDom = document.getElementById("warn-"+dayId);
+    const lockDom = document.getElementById("lock-"+dayId);
+    const contentDom = document.getElementById("content-"+dayId);
+    const userInput = inputDom.value.trim();
+    const correctPwd = PWD_MAP[dayId];
+
+    if(userInput === correctPwd){
+        // 密码正确，解锁
+        lockDom.style.display = "none";
+        contentDom.style.display = "block";
+        warnDom.innerText = "";
+        wrongCount[dayId] = 0;
+    }else{
+        //密码错误
+        wrongCount[dayId] += 1;
+        warnDom.innerText = `密码错误！错误次数：${wrongCount[dayId]}/3`;
+        inputDom.value = "";
+        // 累计3次错误，SAN暴跌
+        if(wrongCount[dayId] >= 3){
+            sanValue -= 35;
+            if(sanValue <0) sanValue = 0;
+            warnDom.innerText = "⚠️ 三次密码错误！SAN值剧烈下跌！";
+            updateSanUI();
+            // 错误次数重置，防止无限掉san
+            wrongCount[dayId] = 0;
         }
     }
-    renderPageStyle();
+}
 
-    function readClue(subtractValue){
-        san = san - subtractValue;
-        if(san <0) san = 0;
-        localStorage.setItem("san", san);
-        location.reload();
-    }
-    window.readClue = readClue;
+// 时间按钮切换逻辑
+const btns = document.querySelectorAll('.time-btn');
+const cards = document.querySelectorAll('.diary-card');
+btns.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        btns.forEach(b=>b.classList.remove('active'));
+        cards.forEach(c=>c.classList.remove('show'));
+        btn.classList.add('active');
+        const targetId = btn.dataset.id;
+        document.getElementById(targetId).classList.add('show');
+    })
 })
+
+//页面加载初始化
+updateSanUI();
+// 默认展示day1卡片
+document.getElementById("day1").classList.add("show");
 </script>
 </body>
 </html>
->
