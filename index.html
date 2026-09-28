@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>空白页日记</title>
+    <style>
+        * {
+            margin:0;
+            padding:0;
+            box-sizing: border-box;
+        }
+        body{
+            background-color:#111;
+            color:#dddddd;
+            font-family: "SimSun",serif;
+            padding:4rem;
+            line-height:1.8;
+            transition: 0.8s all;
+        }
+        h1{
+            font-size:28px;
+            margin-bottom:30px;
+            letter-spacing:8px;
+        }
+        .intro{
+            max-width:650px;
+            margin-bottom:40px;
+        }
+        a{
+            color:#b88686;
+            font-size:20px;
+            text-decoration:none;
+        }
+        a:hover{
+            text-decoration:underline;
+        }
+        /* SAN 动画样式 */
+        body.sanMid *{
+            animation: shakeSmall 4s infinite alternate ease-in-out;
+        }
+        body.sanLow *{
+            animation: shakeMid 2.5s infinite alternate ease-in-out, flicker 3s infinite;
+        }
+        body.sanCritical *{
+            animation: shakeHard 1.2s infinite alternate ease-in-out, flickerStrong 1.8s infinite;
+        }
+        @keyframes shakeSmall {
+            0% { transform: translate(0px,0px); }
+            100% { transform: translate(0.7px,0.4px); }
+        }
+        @keyframes shakeMid {
+            0% { transform: translate(-1.2px,-0.6px); }
+            100% { transform: translate(1.2px,0.6px); }
+        }
+        @keyframes shakeHard {
+            0% { transform: translate(-3px,-2px); }
+            50% { transform: translate(2px,1px); }
+            100% { transform: translate(-2px,2px); }
+        }
+        @keyframes flicker {
+            0%,92%,100% { opacity: 1; }
+            95% { opacity: 0.92; }
+        }
+        @keyframes flickerStrong {
+            0%, 86%, 94%,100% { opacity: 1; }
+            90% { opacity:0.6; }
+        }
+    </style>
+</head>
+<body>
+    <h1>空白页日记</h1>
+    <div class="intro">
+        <p>你找到了一本被遗弃的日记本，其中有一页被人为撕去。</p>
+        <p>随着不断翻阅日记的碎片记录，你逐渐看见主人公长久承受的压力。每阅读一条线索，你的精神【SAN值】就会被侵蚀。</p>
+        <p>⚠️ SAN归零将触发坏结局。</p>
+        <p>当前SAN值：<span id="sanValue">100</span></p>
+    </div>
+    <p><a href="BD.html">▶ 翻开日记本</a></p>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let san = localStorage.getItem("san") ? Number(localStorage.getItem("san")) : 100;
+    const sanBox = document.getElementById("sanValue");
+    function renderPageStyle(){
+        if(!sanBox) return;
+        sanBox.innerText = san;
+        document.body.classList.remove("sanCritical","sanLow","sanMid");
+        if(san <= 10){
+            document.body.classList.add("sanCritical");
+        }else if(san <=40){
+            document.body.classList.add("sanLow");
+        }else if(san <=70){
+            document.body.classList.add("sanMid");
+        }
+        if(san <=0){
+            location.href="badend.html";
+        }
+    }
+    renderPageStyle();
+})
+</script>
+</body>
+</html>

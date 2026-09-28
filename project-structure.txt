@@ -1,0 +1,13 @@
+blank-diary/
+├─ index.html          #首页序章
+├─ diary.html          #日记页面
+├─ forum.html          #匿名论坛线索页
+├─ chat.html           #聊天记录线索页
+├─ ending_good.html    #真结局页面
+├─ ending_bad.html     #坏结局页面
+├─ style.css           #全局样式
+├─ script.js           #全局SAN逻辑脚本
+└─ assets/
+    ├─ scratch.png     #划痕覆盖素材
+    ├─ paper.jpg       #旧纸张背景
+    └─ ambient_hum.mp3 #氛围音效

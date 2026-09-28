@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>空白页日记 · 坏结局</title>
+    <style>
+        * {margin:0;padding:0;box-sizing:border-box;}
+        body{
+            background:#000;
+            color:#999;
+            font-family:"SimSun",serif;
+            padding:4rem;
+            line-height:2;
+        }
+        h1{
+            color:#772222;
+            margin-bottom:30px;
+        }
+        .text-block{
+            max-width:600px;
+            filter: grayscale(0.9);
+        }
+        .reset-btn{
+            margin-top:40px;
+            padding:10px 20px;
+            cursor:pointer;
+        }
+        @keyframes shakeHard {
+            0% { transform: translate(-3px,-2px); }
+            50% { transform: translate(2px,1px); }
+            100% { transform: translate(-2px,2px); }
+        }
+        @keyframes flickerStrong {
+            0%, 86%, 94%,100% { opacity: 1; }
+            90% { opacity:0.6; }
+        }
+        body{
+            animation: shakeHard 1.2s infinite alternate ease-in-out, flickerStrong 1.8s infinite;
+        }
+    </style>
+</head>
+<body>
+    <h1>精神溃散</h1>
+    <div class="text-block">
+        <p>你读完了所有文字。</p>
+        <p>那些长久的指责、压力、被期待捆绑的重量，全部压在你的身上。</p>
+        <p>日记本上的字迹渐渐模糊。</p>
+        <p>主人公最终被无尽的自我否定吞噬。</p>
+        <p>故事停在这里。</p>
+    </div>
+    <button class="reset-btn" onclick="resetGame()">重新开始游戏（重置SAN）</button>
+
+<script>
+function resetGame(){
+    localStorage.setItem("san",100);
+    location.href="index.html";
+}
+</script>
+</body>
+</html>

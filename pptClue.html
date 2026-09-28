@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPT代做线索</title>
+    <style>
+        * {margin:0;padding:0;box-sizing:border-box;}
+        body{
+            background:#f3f1ed;
+            color:#222;
+            font-family:"SimSun",serif;
+            padding:3rem;
+            line-height:2;
+        }
+        .ppt-box{
+            border:1px solid #aaa;
+            background:#fff;
+            padding:24px;
+            max-width:700px;
+        }
+        .hidden-text{
+            color:#ffffff;
+            background:#ffffff;
+        }
+        .tip{
+            margin:15px 0;
+            color:#555;
+        }
+        .warning-tip{
+            color:#882222;
+            margin:20px 0;
+            font-weight:bold;
+        }
+        button{
+            padding:9px 16px;
+            cursor:pointer;
+            margin:8px 8px 8px 0;
+            background:#444;
+            color:#fff;
+            border:none;
+            border-radius:4px;
+            transition:0.3s;
+        }
+        button:hover{
+            background:#774444;
+        }
+        a{color:#774444;text-decoration:none;}
+        a:hover{text-decoration:underline;}
+        body.sanMid *{animation: shakeSmall 4s infinite alternate ease-in-out;}
+        body.sanLow *{animation: shakeMid 2.5s infinite alternate ease-in-out, flicker 3s infinite;}
+        body.sanCritical *{animation: shakeHard 1.2s infinite alternate ease-in-out, flickerStrong 1.8s infinite;}
+        @keyframes shakeSmall {0% { transform: translate(0px,0px); }100% { transform: translate(0.7px,0.4px); }}
+        @keyframes shakeMid {0% { transform: translate(-1.2px,-0.6px); }100% { transform: translate(1.2px,0.6px); }}
+        @keyframes shakeHard {0% { transform: translate(-3px,-2px); }50% { transform: translate(2px,1px); }100% { transform: translate(-2px,2px); }}
+        @keyframes flicker {0%,92%,100% { opacity: 1; }95% { opacity: 0.92; }}
+        @keyframes flickerStrong {0%, 86%, 94%,100% { opacity: 1; }90% { opacity:0.6; }}
+    </style>
+</head>
+<body>
+    <h2>【兼职存档】PPT代做项目笔记</h2>
+    <p>当前SAN值：<span id="sanValue">100</span></p>
+    <div class="ppt-box">
+        <p>这是主人公林默电脑里留存的自我介绍PPT原稿，是她接的一份自我简介排版练习。</p>
+        <p>文件表面看起来是一份普通的自我介绍，记录爱好、日常。</p>
+        <p class="hidden-text">【网页备用小提示：切换黑白打印模式，隐藏的文字会浮现。真正的密码藏在PPT内部】</p>
+        <p>备注：文件保存于桌面，文件名：林默的自我介绍.pptx</p>
+    </div>
+    <div class="warning-tip">
+        💡解谜提示：下载文件后，使用 PowerPoint / WPS 打开。尝试切换【黑白打印预览模式】，原本看不见的文字会显现。幻灯片还有隐藏页面。
+    </div>
+    <!-- 下载PPT文件按钮 -->
+    <a href="林默的自我介绍.pptx" download>
+        <button>📥 下载林默的自我介绍.pptx</button>
+    </a>
+    <button onclick="readClue(8)">阅读这份PPT档案【-8 SAN】</button>
+    <br>
+    <a href="BD.html">← 返回日记页面</a>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let san = localStorage.getItem("san") ? Number(localStorage.getItem("san")) : 100;
+    const sanBox = document.getElementById("sanValue");
+
+    function renderPageStyle(){
+        if(!sanBox) return;
+        sanBox.innerText = san;
+        document.body.classList.remove("sanCritical","sanLow","sanMid");
+        if(san <= 10){
+            document.body.classList.add("sanCritical");
+        }else if(san <=40){
+            document.body.classList.add("sanLow");
+        }else if(san <=70){
+            document.body.classList.add("sanMid");
+        }
+        if(san <= 0){
+            location.href="badend.html";
+        }
+    }
+    renderPageStyle();
+
+    function readClue(subtractValue){
+        san = san - subtractValue;
+        if(san <0) san = 0;
+        localStorage.setItem("san", san);
+        location.reload();
+    }
+    window.readClue = readClue;
+})
+</script>
+</body>
+</html>

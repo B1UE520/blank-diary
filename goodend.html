@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>空白页日记 · 和解结局</title>
+    <style>
+        * {margin:0;padding:0;box-sizing:border-box;}
+        body{
+            background:#f8f6f2;
+            color:#222;
+            font-family:"SimSun",serif;
+            padding:4rem;
+            line-height:2;
+        }
+        h1{
+            color:#445555;
+            margin-bottom:30px;
+        }
+        .text-block{
+            max-width:650px;
+        }
+        .reset-btn{
+            margin-top:40px;
+            padding:10px 20px;
+            cursor:pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>空白页日记 · 和解</h1>
+    <div class="text-block">
+        <p>你解锁了日记最后一页。</p>
+        <p>主人公写下：</p>
+        <blockquote>
+        “妈妈的痛苦来自她自己的过去，重男轻女的时代、拮据的生活，是困住她的牢笼。
+        但她的创伤不该继续传递给我。我不必承接她所有期待，不用为家庭的全部债务养老负责。
+        我会继续做PPT兼职，弹吉他，去健身房。
+        我无法说服母亲，但我可以和自己和解。”
+        </blockquote>
+        <p>故事到此结束。</p>
+    </div>
+    <button class="reset-btn" onclick="resetGame()">重新开始游戏（重置SAN）</button>
+
+<script>
+function resetGame(){
+    localStorage.setItem("san",100);
+    location.href="index.html";
+}
+</script>
+</body>
+</html>

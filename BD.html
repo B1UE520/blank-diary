@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日记碎片</title>
+    <style>
+        * {
+            margin:0;
+            padding:0;
+            box-sizing: border-box;
+        }
+        body{
+            background-color:#f3f1ed;
+            color:#222222;
+            font-family: "SimSun",serif;
+            padding:3rem;
+            line-height:2;
+            transition:0.8s all;
+        }
+        h2{
+            margin-bottom:24px;
+        }
+        .clue-block{
+            margin:20px 0;
+            padding:16px;
+            border:1px solid #ccc;
+            max-width:700px;
+        }
+        button{
+            padding:8px 14px;
+            cursor:pointer;
+            margin:8px;
+        }
+        a{
+            color:#774444;
+        }
+        /* SAN档位抖动闪烁动画 */
+        body.sanMid *{
+            animation: shakeSmall 4s infinite alternate ease-in-out;
+        }
+        body.sanLow *{
+            animation: shakeMid 2.5s infinite alternate ease-in-out, flicker 3s infinite;
+        }
+        body.sanCritical *{
+            animation: shakeHard 1.2s infinite alternate ease-in-out, flickerStrong 1.8s infinite;
+        }
+        @keyframes shakeSmall {
+            0% { transform: translate(0px,0px); }
+            100% { transform: translate(0.7px,0.4px); }
+        }
+        @keyframes shakeMid {
+            0% { transform: translate(-1.2px,-0.6px); }
+            100% { transform: translate(1.2px,0.6px); }
+        }
+        @keyframes shakeHard {
+            0% { transform: translate(-3px,-2px); }
+            50% { transform: translate(2px,1px); }
+            100% { transform: translate(-2px,2px); }
+        }
+        @keyframes flicker {
+            0%,92%,100% { opacity: 1; }
+            95% { opacity: 0.92; }
+        }
+        @keyframes flickerStrong {
+            0%, 86%, 94%,100% { opacity: 1; }
+            90% { opacity:0.6; }
+        }
+    </style>
+</head>
+<body>
+    <h2>日记碎片记录</h2>
+    <p>当前SAN值：<span id="sanValue">100</span></p>
+
+    <div class="clue-block">
+        <p>【线索1】一段母亲的指责文字</p>
+        <button onclick="readClue(15)">阅读记录 【-15 SAN】</button>
+    </div>
+    <div class="clue-block">
+        <p>【线索2】隐藏彩蛋：母亲私人日记</p>
+        <button onclick="readClue(20)">翻阅母亲日记【-20 SAN】</button>
+    </div>
+    <div class="clue-block">
+        <p>【线索3】PPT代做兼职记录，提示密码藏于《晴天》吉他谱</p>
+        <button onclick="readClue(10)">查看兼职笔记【-10 SAN】</button>
+    </div>
+    <div class="clue-block">
+        <p>【线索4】大学兼职：PPT代做项目笔记（黑白隐藏文字解谜）</p>
+        <button onclick="readClue(8)">打开PPT文档【-8 SAN】</button>
+        <p><a href="pptClue.html">进入PPT解谜页面</a></p>
+    </div>
+
+    <br>
+    <p>✅ 拿到吉他密码之后前往解锁页面：<a href="password.html">密码解锁入口</a></p>
+    <br>
+    <p><a href="index.html">← 返回首页</a></p>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let san = localStorage.getItem("san") ? Number(localStorage.getItem("san")) : 100;
+    const sanBox = document.getElementById("sanValue");
+
+    function renderPageStyle(){
+        if(!sanBox) return;
+        sanBox.innerText = san;
+        //清除全部旧san class，防止样式叠加冲突
+        document.body.classList.remove("sanCritical","sanLow","sanMid");
+
+        if(san <= 10){
+            document.body.classList.add("sanCritical");
+        }else if(san <=40){
+            document.body.classList.add("sanLow");
+        }else if(san <=70){
+            document.body.classList.add("sanMid");
+        }
+        // SAN归零，自动跳转坏结局
+        if(san <= 0){
+            location.href="badend.html";
+        }
+    }
+    renderPageStyle();
+
+    function readClue(subtractValue){
+        san = san - subtractValue;
+        if(san <0) san = 0;
+        localStorage.setItem("san", san);
+        location.reload();
+    }
+    window.readClue = readClue;
+})
+</script>
+</body>
+</html>
+>
